@@ -1,6 +1,6 @@
 # python-sonarqube-jenkins
 
-A comprehensive template and demo for integrating SonarQube and Jenkins with a FastAPI Python application, enabling robust CI/CD pipelines and automated code quality analysis.
+A template and demonstration project for integrating SonarQube and Jenkins with a FastAPI Python application, providing a robust CI/CD pipeline and automated code quality analysis.
 
 ---
 
@@ -29,16 +29,16 @@ A comprehensive template and demo for integrating SonarQube and Jenkins with a F
 
 ## Project Overview
 
-This project demonstrates how to set up a modern CI/CD pipeline using **SonarQube** for code quality analysis and **Jenkins** for automation, integrated with a sample **FastAPI** application. It provides ready-to-use Docker Compose files, Makefile commands, and scripts for local and cloud deployment.
+This repository demonstrates how to build a modern CI/CD pipeline using **SonarQube** for code quality and **Jenkins** for automation, integrated with a sample **FastAPI** application. It includes ready-to-use Docker Compose files, Makefile commands, and scripts for both local and cloud deployment.
 
 ## Features
 
-- **FastAPI Task Manager**: Simple REST API for managing tasks (CRUD operations).
-- **SonarQube Integration**: Automated code quality and coverage analysis.
-- **Jenkins Integration**: CI/CD pipeline automation.
-- **Dockerized Setup**: Easy local deployment for SonarQube and Jenkins.
-- **Cloud Ready**: Instructions for deploying on Google Cloud Platform (GCP).
-- **Comprehensive Testing**: Unit tests and coverage reporting.
+- **FastAPI Task Manager**: REST API for task management (CRUD).
+- **SonarQube Integration**: Automated code quality and coverage checks.
+- **Jenkins Integration**: Automated CI/CD pipeline.
+- **Dockerized Setup**: Simple local deployment for SonarQube and Jenkins.
+- **Cloud Ready**: GCP deployment instructions included.
+- **Comprehensive Testing**: Unit tests and coverage reports.
 
 ## Architecture
 
@@ -46,17 +46,17 @@ This project demonstrates how to set up a modern CI/CD pipeline using **SonarQub
 [Developer] → [Git Repo] → [Jenkins] → [SonarQube] → [FastAPI App]
 ```
 
-- **Jenkins** automates testing and triggers SonarQube analysis.
-- **SonarQube** analyzes code quality and test coverage.
-- **FastAPI** app is the target for CI/CD and code analysis.
+- **Jenkins**: Automates testing and triggers SonarQube analysis.
+- **SonarQube**: Analyzes code quality and test coverage.
+- **FastAPI**: Target application for CI/CD and code analysis.
 
 ## Directory Structure
 
 ```
-sonarqube-fastapi/         # FastAPI app and related scripts
-  ├── task_manager/        # Main FastAPI source code and tests
+sonarqube-fastapi/         # FastAPI app and scripts
+  ├── task_manager/        # FastAPI source code and tests
   ├── Makefile             # Automation commands
-  ├── run_sonarqube.sh     # Script to run SonarQube analysis
+  ├── run_sonarqube.sh     # SonarQube analysis script
   ├── sonar-project.properties # SonarQube config
 jenkins/                  # Jenkins Docker Compose setup
 sonarqube/                # SonarQube Docker Compose setup
@@ -69,7 +69,7 @@ sonarqube/                # SonarQube Docker Compose setup
 - Python 3.12+
 - [Poetry](https://python-poetry.org/)
 - Docker & Docker Compose
-- Make (optional, for convenience)
+- Make (optional)
 
 ### Installation
 
@@ -112,13 +112,13 @@ sonarqube/                # SonarQube Docker Compose setup
 - **API Endpoints:**
   - `POST /tasks/` - Create a task
   - `GET /tasks/` - List all tasks
-  - `GET /tasks/{task_id}` - Get a task
+  - `GET /tasks/{task_id}` - Retrieve a task
   - `PUT /tasks/{task_id}` - Update a task
   - `DELETE /tasks/{task_id}` - Delete a task
 
 ### SonarQube Analysis
 
-- **Configure**: Edit `sonar-project.properties` as needed.
+- **Configure:** Edit `sonar-project.properties` as needed.
 - **Run Analysis:**
   ```sh
   ./run_sonarqube.sh
@@ -126,14 +126,14 @@ sonarqube/                # SonarQube Docker Compose setup
   make sonarqube.scan.docker
   ```
 - **View Results:**
-  Visit [http://localhost:9000](http://localhost:9000) and log in to see code quality reports.
+  Visit [http://localhost:9000](http://localhost:9000) to view code quality reports.
 
 ### Jenkins CI/CD
 
 - **Configure Jenkins:**
-  - Install plugins: SonarQube Scanner, Pipeline, etc.
+  - Install required plugins: SonarQube Scanner, Pipeline, etc.
   - Set up a pipeline to run tests and SonarQube analysis.
-  - Integrate with your Git repository.
+  - Connect to your Git repository.
 
 ## Testing
 
@@ -143,7 +143,7 @@ sonarqube/                # SonarQube Docker Compose setup
   # or
   poetry run pytest task_manager
   ```
-- **Coverage report:**
+- **Generate coverage report:**
   ```sh
   make test.coverage.report
   ```
@@ -156,8 +156,8 @@ sonarqube/                # SonarQube Docker Compose setup
 
 ## Cloud Deployment
 
-- See [documentation/demo.md](documentation/demo.md) for step-by-step instructions to deploy SonarQube and Jenkins on Google Cloud Platform (GCP).
+- For step-by-step GCP deployment, see [documentation/demo.md](documentation/demo.md).
 
 ---
 
-For a detailed walkthrough, see [documentation/demo.md](documentation/demo.md).
+For a detailed walkthrough, refer to [documentation/demo.md](documentation/demo.md).
