@@ -20,23 +20,6 @@ sonarqube.stop:
 	@echo "Stopping SonarQube stack..."
 	@docker stack rm sonar
 
-sonarqube.scan:
-	@echo "Running SonarScanner..."
-	@sonar-scanner \
-		-Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) \
-		-Dsonar.sources=. \
-		-Dsonar.host.url=$(SONARQUBE_URL) \
-		-Dsonar.login=$(SONARQUBE_TOKEN)
-
-sonarqube.scan.docker:
-	@echo "Running SonarScanner in Docker..."
-	@docker run \
-		--network=host \
-		-v $(PWD):/$(PROJECT_BASE_DIR) \
-		-e SONAR_HOST_URL="$(SONARQUBE_URL)" \
-		-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) -Dsonar.login=$(SONARQUBE_TOKEN) -Dsonar.projectBaseDir=/$(PROJECT_BASE_DIR)" \
-		sonarsource/sonar-scanner-cli	sonar-scanner -D sonar.projectBaseDir=/$(PROJECT_BASE_DIR)
-
 jenkins.start: init_swarm
 	@echo "Deploying Jenkins stack..."
 	@docker stack deploy -c ../jenkins/docker-compose.yml jenkins
@@ -60,3 +43,12 @@ test.coverage:
 test.coverage.report:
 	@echo "Generating coverage report..."
 	@python -m pytest --cov-report xml:coverage.xml --cov=src --junitxml=result.xml $(PROJECT_BASE_DIR)
+
+sonarqube.scan.docker:
+	@echo "Running SonarScanner in Docker..."
+	@docker run \
+		--network=host \
+		-v $(PWD):/$(PROJECT_BASE_DIR) \
+		-e SONAR_HOST_URL="$(SONARQUBE_URL)" \
+		-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) -Dsonar.login=$(SONARQUBE_TOKEN) -Dsonar.projectBaseDir=/$(PROJECT_BASE_DIR)" \
+		sonarsource/sonar-scanner-cli	
