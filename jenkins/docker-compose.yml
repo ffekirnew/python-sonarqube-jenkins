@@ -12,7 +12,16 @@ services:
       - JAVA_OPTS="-Dhttp.proxyHost=localhost -Dhttp.proxyPort=8080 -Dhttps.proxyHost=localhost -Dhttps.proxyPort=8080"
       - JENKINS_OPTS=--httpPort=7000
     ports:
-      - 7000:7000
-      - 8080:8080
+      - "7000:7000"
+      - "8080:8080"
     volumes:
       - ./data:/var/jenkins_home
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - sonar_network
+
+networks:
+  sonar_network:
+    driver: overlay
