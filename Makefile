@@ -4,25 +4,25 @@ include .env
 PROJECT_BASE_DIR="sonarqube-fastapi"
 
 init_swarm:
-	@echo "Initializing Docker Swarm..."
-	@docker swarm init || echo "Swarm already initialized"
-	@docker network create --driver overlay --attachable sonar_network || echo "Network already exists"
+ @echo "Initializing Docker Swarm..."
+ @docker swarm init || echo "Swarm already initialized"
+ @docker network create --driver overlay --attachable sonar_network || echo "Network already exists"
 
 leave_swarm:
-	@echo "Leaving swarm..."
-	@docker swarm leave --force
+ @echo "Leaving swarm..."
+ @docker swarm leave --force
 
 sonarqube.start: init_swarm
-	@echo "Deploying SonarQube stack..."
-	@docker stack deploy -c sonarqube/docker-compose.yml sonar
+ @echo "Deploying SonarQube stack..."
+ @docker stack deploy -c sonarqube/docker-compose.yml sonar
 
 sonarqube.stop:
-	@echo "Stopping SonarQube stack..."
-	@docker stack rm sonar
+ @echo "Stopping SonarQube stack..."
+ @docker stack rm sonar
 
 sonarqube.scan:
-	@echo "Running SonarScanner..."
-	@sonar-scanner \
+ @echo "Running SonarScanner..."
+ @sonar-scanner \
   -Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) \
   -Dsonar.sources=. \
   -Dsonar.host.url=$(SONARQUBE_URL) \
