@@ -1,78 +1,80 @@
-from typing import Optional, TypedDict
-
-from fastapi import FastAPI
-
-
-class Task(TypedDict):
-    id: int
-    description: str
-    completed: bool
-
-
-class CreateTaskDto(TypedDict):
-    task_id: int
-    description: str
-
+from fastapi import FastAPI, Request
+from src.common.exception import ApplicationException
+from src.domain.dtos.create_task_dto import CreateTaskDto
+from src.domain.responses.base_response import BaseResponse
+from src.domain.task import Task
+from src.infrastructure.task_repository import TaskRepository
+from starlette.responses import JSONResponse
 
 Api = FastAPI(
     title="Task Management API",
     version="1.0.0",
-    description="""
-    A simple API for managing tasks. You can create, read, update, and delete tasks.
-    """,
+    description="A simple API for managing tasks. You can create, read, update, and delete tasks.",
 )
-
-tasks: dict[int, Task] = {}  # In-memory task storage
+task_repository = TaskRepository()
 
 
 @Api.get("/tasks/")
-def get_all_tasks():
-    if not tasks:
-        return {"message": "No tasks found."}
-    return tasks
+def get_all_tasks() -> BaseResponse[list[Task]]:
+    tasks = task_repository.get_all()
+
+    return BaseResponse[list[Task]].success(
+        message="Tasks retrieved successfully.",
+        data=tasks,
+    )
 
 
 @Api.post("/tasks/")
-def create_task(create_task_dto: CreateTaskDto):
-    task_id = create_task_dto["task_id"]
-    if task_id in tasks:
-        return {"error": "Task ID already exists."}
-
-    tasks[task_id] = Task(
-        {
-            "id": task_id,
-            "description": create_task_dto["description"],
-            "completed": False,
-        }
+def create_task(create_task_dto: CreateTaskDto) -> BaseResponse[Task]:
+    task = task_repository.create_task(create_task_dto)
+    return BaseResponse[Task].success(
+        message="Task created successfully.",
+        data=task,
     )
-    return {"message": "Task created successfully."}
 
 
 @Api.get("/tasks/{task_id}")
-def read_task(task_id: int):
-    task = tasks.get(task_id)
-    if not task:
-        return {"error": "Task not found."}
-    return task
+def get_task(task_id: int) -> BaseResponse[Task]:
+    task = task_repository.get(task_id)
+
+    return BaseResponse[Task].success(
+        message="Task retrieved successfully.",
+        data=task,
+    )
 
 
 @Api.put("/tasks/{task_id}")
 def update_task(
-    task_id: int, description: Optional[str] = None, completed: Optional[bool] = None
-):
-    task = tasks.get(task_id)
-    if not task:
-        return {"error": "Task not found."}
-    if description is not None:
-        task["description"] = description
-    if completed is not None:
-        task["completed"] = completed
-    return {"message": "Task updated successfully."}
+    update_task_dto: CreateTaskDto,
+) -> BaseResponse[Task]:
+    updated_task = task_repository.update_task(update_task_dto)
+
+    return BaseResponse[Task].success(
+        message="Task updated successfully.",
+        data=updated_task,
+    )
 
 
 @Api.delete("/tasks/{task_id}")
-def delete_task(task_id: int):
-    if task_id not in tasks:
-        return {"error": "Task not found."}
-    del tasks[task_id]
-    return {"message": "Task deleted successfully."}
+def delete_task(task_id: int) -> BaseResponse[Task]:
+    deleted_task = task_repository.delete_task(task_id)
+
+    return BaseResponse[Task].success(
+        message="Task deleted successfully.",
+        data=deleted_task,
+    )
+
+
+@Api.exception_handler(ApplicationException)
+async def application_exception_handler(
+    request: Request, exception: ApplicationException
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=exception.error_code,
+        content=BaseResponse(
+            is_success=False,
+            message=exception.message,
+            errors=exception.errors,
+            data=None,
+        ),
+    )
