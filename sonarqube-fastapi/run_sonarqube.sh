@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_BASE_DIR=test_manager
+PROJECT_BASE_DIR=task_manager
 SONARQUBE_URL=http://localhost:9000
 SONARQUBE_PROJECT_KEY=fastapi
 SONARQUBE_TOKEN=sqp_f03c2bf4e9bd3319f6efb5139518338a3b318811
