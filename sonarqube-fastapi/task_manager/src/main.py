@@ -1,9 +1,12 @@
-from fastapi import FastAPI, Request
+from typing import Annotated
+
+from fastapi import Depends, FastAPI, Request
 from src.common.exception import ApplicationException
-from src.domain.dtos.create_task_dto import CreateTaskDto
+from src.dependency_setup import get_task_repository
+from src.domain.contracts import ABCTaskRepository
+from src.domain.dtos import CreateTaskDto, UpdateTaskDto
 from src.domain.responses.base_response import BaseResponse
 from src.domain.task import Task
-from src.infrastructure.task_repository import TaskRepository
 from starlette.responses import JSONResponse
 
 Api = FastAPI(
@@ -11,11 +14,12 @@ Api = FastAPI(
     version="1.0.0",
     description="An example API for managing tasks. You can create, read, update, and delete tasks.",
 )
-task_repository = TaskRepository()
 
 
-@Api.get("/tasks/")
-def get_all_tasks() -> BaseResponse[list[Task]]:
+@Api.get("/tasks/", tags=["Tasks"])
+def get_all_tasks(
+    task_repository: Annotated[ABCTaskRepository, Depends(get_task_repository)],
+) -> BaseResponse[list[Task]]:
     tasks = task_repository.get_all()
 
     return BaseResponse[list[Task]].success(
@@ -24,8 +28,11 @@ def get_all_tasks() -> BaseResponse[list[Task]]:
     )
 
 
-@Api.post("/tasks/")
-def create_task(create_task_dto: CreateTaskDto) -> BaseResponse[Task]:
+@Api.post("/tasks/", tags=["Tasks"])
+def create_task(
+    create_task_dto: CreateTaskDto,
+    task_repository: Annotated[ABCTaskRepository, Depends(get_task_repository)],
+) -> BaseResponse[Task]:
     task = task_repository.create_task(create_task_dto)
     return BaseResponse[Task].success(
         message="Task created successfully.",
@@ -33,8 +40,11 @@ def create_task(create_task_dto: CreateTaskDto) -> BaseResponse[Task]:
     )
 
 
-@Api.get("/tasks/{task_id}")
-def get_task(task_id: int) -> BaseResponse[Task]:
+@Api.get("/tasks/{task_id}", tags=["Tasks"])
+def get_task(
+    task_id: int,
+    task_repository: Annotated[ABCTaskRepository, Depends(get_task_repository)],
+) -> BaseResponse[Task]:
     task = task_repository.get(task_id)
 
     return BaseResponse[Task].success(
@@ -43,11 +53,13 @@ def get_task(task_id: int) -> BaseResponse[Task]:
     )
 
 
-@Api.put("/tasks/{task_id}")
+@Api.put("/tasks/{task_id}", tags=["Tasks"])
 def update_task(
-    update_task_dto: CreateTaskDto,
+    task_id: int,
+    update_task_dto: UpdateTaskDto,
+    task_repository: Annotated[ABCTaskRepository, Depends(get_task_repository)],
 ) -> BaseResponse[Task]:
-    updated_task = task_repository.update_task(update_task_dto)
+    updated_task = task_repository.update_task(task_id, update_task_dto)
 
     return BaseResponse[Task].success(
         message="Task updated successfully.",
@@ -55,8 +67,11 @@ def update_task(
     )
 
 
-@Api.delete("/tasks/{task_id}")
-def delete_task(task_id: int) -> BaseResponse[Task]:
+@Api.delete("/tasks/{task_id}", tags=["Tasks"])
+def delete_task(
+    task_id: int,
+    task_repository: Annotated[ABCTaskRepository, Depends(get_task_repository)],
+) -> BaseResponse[Task]:
     deleted_task = task_repository.delete_task(task_id)
 
     return BaseResponse[Task].success(
@@ -69,6 +84,10 @@ def delete_task(task_id: int) -> BaseResponse[Task]:
 async def application_exception_handler(
     request: Request, exception: ApplicationException
 ) -> JSONResponse:
+    logger = request.app.logger
+    logger.error(
+        f"ApplicationException: {exception.message} - Errors: {exception.errors}"
+    )
     return JSONResponse(
         status_code=exception.error_code,
         content=BaseResponse(

@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: init_swarm leave_swarm sonarqube.start sonarqube.stop sonarqube.scan sonarqube.scan.docker sonarqube.scan.docker.log jenkins.start fastapi.run test.run test.coverage test.coverage.report
+.PHONY: init_swarm leave_swarm sonarqube.start sonarqube.stop sonarqube.scan sonarqube.scan.docker sonarqube.scan.docker.log jenkins.start fastapi.run test.run test.coverage test.coverage.report activate_venv
 PROJECT_BASE_DIR=task_manager
 
 init_swarm:
@@ -52,3 +52,16 @@ sonarqube.scan.docker:
 		-e SONAR_HOST_URL="$(SONARQUBE_URL)" \
 		-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) -Dsonar.login=$(SONARQUBE_TOKEN) -Dsonar.projectBaseDir=/$(PROJECT_BASE_DIR)" \
 		sonarsource/sonar-scanner-cli	
+
+sonarqube.scan.docker.log:
+	@echo "Running SonarScanner in Docker..."
+	@docker run \
+		--network=host \
+		-v $(PWD):/$(PROJECT_BASE_DIR) \
+		-e SONAR_HOST_URL="$(SONARQUBE_URL)" \
+		-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=$(SONARQUBE_PROJECT_KEY) -Dsonar.login=$(SONARQUBE_TOKEN) -Dsonar.projectBaseDir=/$(PROJECT_BASE_DIR)" \
+		sonarsource/sonar-scanner-cli	-X
+
+activate_venv:
+	@echo "Activating virtual environment..."
+	@source /Users/ffekirnew/Library/Caches/pypoetry/virtualenvs/python-sonarqube-jenkins-jxBsoVsh-py3.13/bin/activate

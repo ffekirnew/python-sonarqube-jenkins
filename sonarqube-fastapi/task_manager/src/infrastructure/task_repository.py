@@ -1,23 +1,28 @@
 from src.common.exception import ApplicationException, Exceptions
-from src.domain.dtos.create_task_dto import CreateTaskDto
+from src.common.singleton import SingletonMeta
+from src.domain.contracts import ABCTaskRepository
+from src.domain.dtos import CreateTaskDto, UpdateTaskDto
 from src.domain.task import Task
 
 
-class TaskRepository:
-    def __init__(self):
-        self.tasks = {}
+class TaskRepository(ABCTaskRepository, metaclass=SingletonMeta):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._curr_id: int = 1001
+        self.tasks: dict[int, Task] = {
+            1000: Task(id=1000, description="Sample task", completed=False),
+        }
 
     def create_task(self, task_data: CreateTaskDto) -> Task:
-        task_id = task_data["id"]
-        if task_id in self.tasks:
-            raise ApplicationException(
-                Exceptions.BadRequestException,
-                "Cannot create task.",
-                ["Task ID already exists."],
-            )
+        new_task: Task = {
+            "id": self._curr_id,
+            "completed": False,
+            **task_data,
+        }
+        self.tasks[self._curr_id] = new_task
+        self._curr_id += 1
 
-        self.tasks[task_id] = task_data
-        return self.tasks[task_id]
+        return new_task
 
     def get_all(self) -> list[Task]:
         if not self.tasks:
@@ -47,9 +52,9 @@ class TaskRepository:
 
     def update_task(
         self,
-        task_data: CreateTaskDto,
+        task_id: int,
+        task_data: UpdateTaskDto,
     ) -> Task:
-        task_id = task_data["id"]
         if task_id not in self.tasks:
             raise ApplicationException(
                 Exceptions.NotFoundException,
@@ -57,5 +62,7 @@ class TaskRepository:
                 ["Task ID not found."],
             )
 
-        self.tasks[task_id] = task_data
-        return self.tasks[task_id]
+        update_task: Task = {"id": task_id, **task_data}
+        self.tasks[task_id] = update_task
+
+        return update_task
