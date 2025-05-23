@@ -1,7 +1,17 @@
+"""Exception handling module for the Task Manager application.
+
+This module defines custom exceptions and their corresponding HTTP status codes
+for consistent error handling across the application.
+"""
+
 from enum import StrEnum
 
 
 class Exceptions(StrEnum):
+    """Enumeration of all possible application exceptions.
+    
+    Each exception type maps to a specific HTTP status code defined in ERROR_CODES.
+    """
     BadRequestException = "BadRequestException"
     InternalServerException = "InternalServerException"
     NotFoundException = "NotFoundException"
@@ -18,6 +28,7 @@ class Exceptions(StrEnum):
     RequestTimeoutException = "RequestTimeoutException"
 
 
+# Mapping of exception types to their corresponding HTTP status codes
 ERROR_CODES: dict[Exceptions, int] = {
     Exceptions.BadRequestException: 400,
     Exceptions.InternalServerException: 500,
@@ -37,6 +48,16 @@ ERROR_CODES: dict[Exceptions, int] = {
 
 
 class ApplicationException(Exception):
+    """Base exception class for all application-specific exceptions.
+    
+    This class extends the built-in Exception class and adds support for
+    HTTP status codes and custom error messages.
+
+    Args:
+        exception_type: The type of exception from the Exceptions enum
+        message: A human-readable error message
+        errors: A list of specific error details
+    """
     def __init__(
         self, exception_type: Exceptions, message: str, errors: list[str]
     ) -> None:
