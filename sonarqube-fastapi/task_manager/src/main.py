@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 Api = FastAPI(
     title="Task Management API",
     version="1.0.0",
-    description="A simple API for managing tasks. You can create, read, update, and delete tasks.",
+    description="An example API for managing tasks. You can create, read, update, and delete tasks.",
 )
 task_repository = TaskRepository()
 
