@@ -2,17 +2,23 @@
 
 This demo will guide you through setting up a robust CI/CD pipeline using SonarQube and Jenkins, integrated with a FastAPI application. By the end of this demo, you will have a clear understanding of how to analyze code quality and automate deployments.
 
+# Prerequisites
+
+Before starting this demo, ensure you have the following installed:
+
+- Docker (20.10.x or later)
+- Docker Compose (v2.x or later)
+- Python 3.9+
+- Poetry (1.4.x or later)
+- Make
+
 # What this demo will cover:
 
-- Setting up SonarQube for code quality analysis.
-
-- Integrating SonarQube with a FastAPI application.
-
-- Running code analysis using `sonar-scanner`.
-
-- Setting up Jenkins for CI/CD.
-
-- Deploying SonarQube and Jenkins on Google Cloud Platform (GCP).
+- Setting up SonarQube (Latest LTS version) for code quality analysis
+- Integrating SonarQube with a FastAPI application
+- Running code analysis using `sonar-scanner`
+- Setting up Jenkins (Latest LTS version) for CI/CD
+- Deploying SonarQube and Jenkins on Google Cloud Platform (GCP)
 
 # SonarQube setup
 
@@ -116,4 +122,50 @@ This demo will guide you through setting up a robust CI/CD pipeline using SonarQ
 2. **Install Docker**: Set up Docker on the VM.
 
 3. **Deploy Jenkins**: Use the `docker-compose.yml` file to deploy Jenkins on the VM.
+
+# Troubleshooting
+
+## Common Issues and Solutions
+
+1. **SonarQube Fails to Start**
+   - Check if ElasticSearch system requirements are met:
+     ```bash
+     sysctl -w vm.max_map_count=262144
+     ```
+   - Verify Docker memory limits are sufficient (at least 4GB recommended)
+
+2. **Jenkins Pipeline Failures**
+   - Ensure Jenkins has proper permissions to access Docker
+   - Verify all required plugins are installed and up-to-date
+   - Check network connectivity between Jenkins and SonarQube
+
+3. **Sonar Scanner Issues**
+   - Validate the `sonar-project.properties` configuration
+   - Ensure the SonarQube token is correctly set
+   - Check if the project key matches the one in SonarQube
+
+## Getting Help
+
+- Check the official documentation:
+  - SonarQube: https://docs.sonarqube.org/
+  - Jenkins: https://www.jenkins.io/doc/
+- Review the project's issue tracker
+- Join the community forums for additional support
+
+# Maintenance and Updates
+
+1. **Regular Updates**
+   - Keep Docker images up-to-date
+   - Regularly update Jenkins plugins
+   - Monitor SonarQube for new releases
+
+2. **Backup Strategy**
+   - Implement regular backups of SonarQube data
+   - Back up Jenkins configuration and job definitions
+   - Document the restore process
+
+3. **Performance Monitoring**
+   - Monitor resource usage
+   - Set up alerts for system health
+   - Regular performance optimization
 
