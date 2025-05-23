@@ -25,13 +25,6 @@ class TaskRepository(ABCTaskRepository, metaclass=SingletonMeta):
         return new_task
 
     def get_all(self) -> list[Task]:
-        if not self.tasks:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Cannot fetch tasks.",
-                ["No tasks found."],
-            )
-
         return list(self.tasks.values())
 
     def get(self, task_id: int) -> Task | None:
@@ -55,14 +48,19 @@ class TaskRepository(ABCTaskRepository, metaclass=SingletonMeta):
         task_id: int,
         task_data: UpdateTaskDto,
     ) -> Task:
-        if task_id not in self.tasks:
+        task = self.get(task_id)
+        if task is None:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Cannot update task.",
                 ["Task ID not found."],
             )
 
-        update_task: Task = {"id": task_id, **task_data}
-        self.tasks[task_id] = update_task
+        updated_task: Task = {
+            "id": task["id"],
+            "description": (task_data.get("description", task["description"])),
+            "completed": (task_data.get("completed", task["completed"])),
+        }
+        self.tasks[task_id] = updated_task
 
-        return update_task
+        return updated_task

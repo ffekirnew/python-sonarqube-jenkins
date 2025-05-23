@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Request
-from src.common.exception import ApplicationException
+from src.common.exception import ApplicationException, Exceptions
 from src.dependency_setup import get_task_repository
 from src.domain.contracts import ABCTaskRepository
 from src.domain.dtos import CreateTaskDto, UpdateTaskDto
@@ -47,6 +47,13 @@ def get_task(
 ) -> BaseResponse[Task]:
     task = task_repository.get(task_id)
 
+    if task is None:
+        raise ApplicationException(
+            Exceptions.NotFoundException,
+            "Cannot fetch task.",
+            ["Task not found."],
+        )
+
     return BaseResponse[Task].success(
         message="Task retrieved successfully.",
         data=task,
@@ -84,16 +91,10 @@ def delete_task(
 async def application_exception_handler(
     request: Request, exception: ApplicationException
 ) -> JSONResponse:
-    logger = request.app.logger
-    logger.error(
-        f"ApplicationException: {exception.message} - Errors: {exception.errors}"
-    )
     return JSONResponse(
         status_code=exception.error_code,
-        content=BaseResponse(
-            is_success=False,
+        content=BaseResponse.error(
             message=exception.message,
             errors=exception.errors,
-            data=None,
-        ),
+        ).to_dict(),
     )

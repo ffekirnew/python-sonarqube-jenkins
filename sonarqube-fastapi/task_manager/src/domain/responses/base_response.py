@@ -11,8 +11,16 @@ class _ApiResponse(BaseModel):
 
 
 class BaseResponse(_ApiResponse, Generic[T]):
-    data: Optional[T] = None
-    errors: list[str] = []
+    data: Optional[T]
+    errors: list[str]
+
+    def to_dict(self) -> dict:
+        return {
+            "is_success": self.is_success,
+            "message": self.message,
+            "data": self.data,
+            "errors": self.errors,
+        }
 
     @classmethod
     def success(cls, message: str, data: Optional[T] = None) -> "BaseResponse[T]":
