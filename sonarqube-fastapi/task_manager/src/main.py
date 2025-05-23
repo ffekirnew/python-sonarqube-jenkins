@@ -9,6 +9,7 @@ from src.domain.responses.base_response import BaseResponse
 from src.domain.task import Task
 from starlette.responses import JSONResponse
 
+# Initialize FastAPI application with metadata
 Api = FastAPI(
     title="Task Management API",
     version="1.0.0",
@@ -91,6 +92,17 @@ def delete_task(
 async def application_exception_handler(
     request: Request, exception: ApplicationException
 ) -> JSONResponse:
+    """
+    Global exception handler for ApplicationException.
+    Converts application-specific exceptions into appropriate JSON responses.
+    
+    Args:
+        request (Request): The incoming request that caused the exception.
+        exception (ApplicationException): The caught application exception.
+        
+    Returns:
+        JSONResponse: A formatted error response with appropriate status code and error details.
+    """
     return JSONResponse(
         status_code=exception.error_code,
         content=BaseResponse.error(
