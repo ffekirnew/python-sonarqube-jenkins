@@ -5,6 +5,10 @@ SONARQUBE_URL=http://localhost:9000
 SONARQUBE_PROJECT_KEY=fastapi
 SONARQUBE_TOKEN=sqp_f03c2bf4e9bd3319f6efb5139518338a3b318811
 
+docker build -t fastapi-test -f Dockerfile.test .
+
+docker run --rm fastapi-test
+
 docker run \
 		--network=host \
 		-v $PWD:/$PROJECT_BASE_DIR \
