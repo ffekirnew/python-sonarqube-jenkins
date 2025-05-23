@@ -79,11 +79,13 @@ Before starting this demo, ensure you have the following installed:
    make jenkins.start
    ```
 
-2. **Configure Jenkins**:
+3. **Access Jenkins**: Open your browser and navigate to `http://localhost:8080`. Follow the instructions to unlock Jenkins.
+
+4. **Configure Jenkins**:
    - Install necessary plugins (e.g., SonarQube Scanner, Pipeline).
    - Set up a pipeline to automate code analysis and deployment.
 
-3. **Integrate with SonarQube**: Add SonarQube as a tool in Jenkins and configure the pipeline to run SonarQube analysis.
+5. **Integrate with SonarQube**: Add SonarQube as a tool in Jenkins and configure the pipeline to run SonarQube analysis.
 
 # Next Steps:
 
@@ -123,49 +125,4 @@ Before starting this demo, ensure you have the following installed:
 
 3. **Deploy Jenkins**: Use the `docker-compose.yml` file to deploy Jenkins on the VM.
 
-# Troubleshooting
-
-## Common Issues and Solutions
-
-1. **SonarQube Fails to Start**
-   - Check if ElasticSearch system requirements are met:
-     ```bash
-     sysctl -w vm.max_map_count=262144
-     ```
-   - Verify Docker memory limits are sufficient (at least 4GB recommended)
-
-2. **Jenkins Pipeline Failures**
-   - Ensure Jenkins has proper permissions to access Docker
-   - Verify all required plugins are installed and up-to-date
-   - Check network connectivity between Jenkins and SonarQube
-
-3. **Sonar Scanner Issues**
-   - Validate the `sonar-project.properties` configuration
-   - Ensure the SonarQube token is correctly set
-   - Check if the project key matches the one in SonarQube
-
-## Getting Help
-
-- Check the official documentation:
-  - SonarQube: https://docs.sonarqube.org/
-  - Jenkins: https://www.jenkins.io/doc/
-- Review the project's issue tracker
-- Join the community forums for additional support
-
-# Maintenance and Updates
-
-1. **Regular Updates**
-   - Keep Docker images up-to-date
-   - Regularly update Jenkins plugins
-   - Monitor SonarQube for new releases
-
-2. **Backup Strategy**
-   - Implement regular backups of SonarQube data
-   - Back up Jenkins configuration and job definitions
-   - Document the restore process
-
-3. **Performance Monitoring**
-   - Monitor resource usage
-   - Set up alerts for system health
-   - Regular performance optimization
 
