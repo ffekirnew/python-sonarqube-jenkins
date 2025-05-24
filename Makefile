@@ -33,6 +33,7 @@ jenkins.container.build:
 	@docker build -t selected-topics/jenkins:latest -f jenkins/Dockerfile .
 
 jenkins.container:
+	@echo "Running Jenkins container..."
 	@docker run \
 		--name jenkins \
 		--detach \
@@ -41,10 +42,5 @@ jenkins.container:
 		-p 8080:8080 \
 		-p 50000:50000 \
 		--restart=on-failure \
-		selected-topics/jenkins;
+		ffekirnew/jenkins;
 
-jenkins.upload.gcp:
-	@echo "Make: Building and pushing docker image to GCP..."
-	docker buildx build -t $(PROJECT_NAME):$(IMAGE_TAG) --platform linux/amd64 .
-	docker tag $(PROJECT_NAME):$(IMAGE_TAG) gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)
-	docker push gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)
