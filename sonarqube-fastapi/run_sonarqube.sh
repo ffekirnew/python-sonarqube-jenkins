@@ -2,12 +2,10 @@
 
 PROJECT_BASE_DIR=task_manager
 SONARQUBE_URL=http://localhost:9000
-SONARQUBE_PROJECT_KEY=fastapi
-SONARQUBE_TOKEN=sqp_f03c2bf4e9bd3319f6efb5139518338a3b318811
+SONARQUBE_PROJECT_KEY=fastapi-demo-2
+SONARQUBE_TOKEN=sqp_dc6938d4e5794c6e8e21f69363d80960f5774836
 
 
-ls .
-cd sonarqube-fastapi
 docker run \
 		--network=host \
 		-v $PWD:/$PROJECT_BASE_DIR \
