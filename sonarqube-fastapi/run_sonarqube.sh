@@ -7,7 +7,9 @@ SONARQUBE_TOKEN=sqp_f03c2bf4e9bd3319f6efb5139518338a3b318811
 
 docker build -t fastapi-test -f Dockerfile.test .
 
-docker run --rm fastapi-test
+docker run --rm -v $PWD:/app fastapi-test
+
+ls -la
 
 docker run \
 		--network=host \
