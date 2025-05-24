@@ -16,16 +16,21 @@ pipeline {
 
         stage('Test') {
             steps {
-                docker build -t fastapi-test -f Dockerfile.test .
-                docker run --rm -v $PWD:/app fastapi-test
-            } 
+                sh '''
+                    cd sonarqube-fastapi
+                    echo "Running tests..."
+                    ./run_tests.sh
+                '''
+            }
         }
 
-        stage('SonarQube Analysis') {
-            }
+        stage('SonarQube Analysis') { 
             steps {
-                sh 'echo "Running SonarQube analysis..."'
-                sh ./run_sonarqube.sh
+                sh '''
+                    cd sonarqube-fastapi
+                    echo "Running sonarqube..."
+                    ./run_sonarqube.sh
+                '''
             }
         }
 
