@@ -28,6 +28,10 @@ jenkins.stop:
 	@echo "Stopping Jenkins stack..."
 	@docker stack rm jenkins
 
+jenkins.container.build:
+	@echo "Building Jenkins container..."
+	@docker build -t selected-topics/jenkins:latest -f jenkins/Dockerfile .
+
 jenkins.container:
 	@docker run \
 		--name jenkins \
@@ -37,4 +41,10 @@ jenkins.container:
 		-p 8080:8080 \
 		-p 50000:50000 \
 		--restart=on-failure \
-		ffekirnew/jenkins;
+		selected-topics/jenkins;
+
+jenkins.upload.gcp:
+	@echo "Make: Building and pushing docker image to GCP..."
+	docker buildx build -t $(PROJECT_NAME):$(IMAGE_TAG) --platform linux/amd64 .
+	docker tag $(PROJECT_NAME):$(IMAGE_TAG) gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)
+	docker push gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)

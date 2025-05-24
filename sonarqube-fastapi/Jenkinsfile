@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building the project..."'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                docker build -t fastapi-test -f Dockerfile.test .
+                docker run --rm -v $PWD:/app fastapi-test
+            } 
+        }
+
+        stage('SonarQube Analysis') {
+            }
+            steps {
+                sh 'echo "Running SonarQube analysis..."'
+                sh ./run_sonarqube.sh
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo "Deploying the application..."'
+            }
+        }
+    }
+}
+
