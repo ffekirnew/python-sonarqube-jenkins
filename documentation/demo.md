@@ -2,17 +2,23 @@
 
 This demo will guide you through setting up a robust CI/CD pipeline using SonarQube and Jenkins, integrated with a FastAPI application. By the end of this demo, you will have a clear understanding of how to analyze code quality and automate deployments.
 
+# Prerequisites
+
+Before starting this demo, ensure you have the following installed:
+
+- Docker (20.10.x or later)
+- Docker Compose (v2.x or later)
+- Python 3.9+
+- Poetry (1.4.x or later)
+- Make
+
 # What this demo will cover:
 
-- Setting up SonarQube for code quality analysis.
-
-- Integrating SonarQube with a FastAPI application.
-
-- Running code analysis using `sonar-scanner`.
-
-- Setting up Jenkins for CI/CD.
-
-- Deploying SonarQube and Jenkins on Google Cloud Platform (GCP).
+- Setting up SonarQube (Latest LTS version) for code quality analysis
+- Integrating SonarQube with a FastAPI application
+- Running code analysis using `sonar-scanner`
+- Setting up Jenkins (Latest LTS version) for CI/CD
+- Deploying SonarQube and Jenkins on Google Cloud Platform (GCP)
 
 # SonarQube setup
 
@@ -73,11 +79,13 @@ This demo will guide you through setting up a robust CI/CD pipeline using SonarQ
    make jenkins.start
    ```
 
-2. **Configure Jenkins**:
+3. **Access Jenkins**: Open your browser and navigate to `http://localhost:8080`. Follow the instructions to unlock Jenkins.
+
+4. **Configure Jenkins**:
    - Install necessary plugins (e.g., SonarQube Scanner, Pipeline).
    - Set up a pipeline to automate code analysis and deployment.
 
-3. **Integrate with SonarQube**: Add SonarQube as a tool in Jenkins and configure the pipeline to run SonarQube analysis.
+5. **Integrate with SonarQube**: Add SonarQube as a tool in Jenkins and configure the pipeline to run SonarQube analysis.
 
 # Next Steps:
 
@@ -116,4 +124,5 @@ This demo will guide you through setting up a robust CI/CD pipeline using SonarQ
 2. **Install Docker**: Set up Docker on the VM.
 
 3. **Deploy Jenkins**: Use the `docker-compose.yml` file to deploy Jenkins on the VM.
+
 

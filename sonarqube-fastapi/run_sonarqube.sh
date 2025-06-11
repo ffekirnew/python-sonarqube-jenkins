@@ -1,9 +1,10 @@
 #!/bin/bash
 
-PROJECT_BASE_DIR=test_manager
+PROJECT_BASE_DIR=task_manager
 SONARQUBE_URL=http://localhost:9000
-SONARQUBE_PROJECT_KEY=fastapi-sonarqube
-SONARQUBE_TOKEN=sqp_319836e0c8adee09481c497803d4ebcf26b522e8
+SONARQUBE_PROJECT_KEY=fastapi-demo-2
+SONARQUBE_TOKEN=sqp_dc6938d4e5794c6e8e21f69363d80960f5774836
+
 
 docker run \
 		--network=host \
